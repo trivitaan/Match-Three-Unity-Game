@@ -159,12 +159,12 @@ MonoBehaviour:
   offsetTile: {x: 0.1, y: 0.1}
   offsetBoard: {x: 0, y: -0.25}
   tileTypes:
-  - {fileID: 21300000, guid: 301ae0844536c964b9a3c5cb78f44456, type: 3}
+  - {fileID: 21300000, guid: b51d47471177a2c448f7ed6fc4a6ef81, type: 3}
+  - {fileID: 21300000, guid: eac15217564beef4bac7fd65313fb7c2, type: 3}
   - {fileID: 21300000, guid: 2e2cd5e3a0e43394792fbb57574ba1e0, type: 3}
+  - {fileID: 21300000, guid: 301ae0844536c964b9a3c5cb78f44456, type: 3}
   - {fileID: 21300000, guid: f995a13b00f26bb49856e149264b572a, type: 3}
-  - {fileID: 21300000, guid: 185157a87d6b4b64eab201d866a7b422, type: 3}
   - {fileID: 21300000, guid: 76808c22975783440b267e54dfa5608d, type: 3}
-  - {fileID: 21300000, guid: 9f264ad38e52afa429b4f8a46aef0a02, type: 3}
   tilePrefab: {fileID: 6332912368454801875, guid: a4b2f6293e741d44189360eab9f48369,
     type: 3}
 --- !u!1 &519420028
@@ -203,7 +203,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.9716981, g: 0.8639236, b: 0.41709682, a: 0}
+  m_BackGroundColor: {r: 0.4056604, g: 0.23133463, b: 0.19326274, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}

@@ -45,6 +45,15 @@ public class BoardManager : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    public bool IsAnimating
+    {
+        get{return IsSwapping;}
+    }
+
+    public bool IsSwapping{get; set;}
+
+    
     private void CreateBoard(Vector2 tileSize)
     {
         tiles = new TileController[size.x, size.y];
@@ -54,16 +63,17 @@ public class BoardManager : MonoBehaviour
         startPosition = (Vector2)transform.position - (totalSize / 2) + offsetBoard;
         endPosition = startPosition + totalSize;
 
-        for(int x = 0; x < size.x; x++)
+        for (int x = 0; x < size.x; x++)
         {
-            for(int y = 0; y < size.y; y++)
+            for (int y = 0; y < size.y; y++)
             {
-                TileController newTile = Instantiate(tilePrefab, new Vector2(startPosition.x + (tileSize.x + offsetTile.x) * x, startPosition.y + (tileSize.y + offsetTile.y) * y), tilePrefab.transform.rotation, transform).GetComponent<TileController>();
+                TileController newTile = Instantiate(tilePrefab, new Vector2(startPosition.x + ((tileSize.x + offsetTile.x) * x), startPosition.y + ((tileSize.y + offsetTile.y) * y)), tilePrefab.transform.rotation, transform).GetComponent<TileController>();
                 tiles[x, y] = newTile;
 
-                //Get no match ID
+                // get no tile id
                 List<int> possibleId = GetStartingPossibleIdList(x, y);
                 int newId = possibleId[Random.Range(0, possibleId.Count)];
+
                 newTile.ChangeId(newId, x, y);
             }
         }
@@ -73,29 +83,53 @@ public class BoardManager : MonoBehaviour
     {
         List<int> possibleId = new List<int>();
 
-        for(int i = 0; i < tileTypes.Count; i++)
+        for (int i = 0; i < tileTypes.Count; i++)
         {
             possibleId.Add(i);
         }
 
-        if(x > 1 && tiles[x-1, y].id == tiles[x -2, y].id)
+        if (x > 1 && tiles[x - 1, y].id == tiles[x - 2, y].id)
         {
-            possibleId.Remove(tiles[x-1, y].id);
+            possibleId.Remove(tiles[x - 1, y].id);
         }
-        if(y > 1 && tiles[x, y -1].id == tiles[x, y-2].id)
+
+        if (y > 1 && tiles[x, y - 1].id == tiles[x, y - 2].id)
         {
-            possibleId.Remove(tiles[x, y-1].id);
+            possibleId.Remove(tiles[x, y - 1].id);
         }
 
         return possibleId;
     }
 
-    public bool IsAnimating
-    {
-        get{return IsSwapping;}
-    }
 
-    public bool IsSwapping{get; set;}
+    public List<TileController> GetAllMatches()
+    {
+        List<TileController> matchingTiles = new List<TileController>();
+
+        for(int x = 0; x < size.x; x++)
+        {
+            for(int y = 0; y < size.y; y++)
+            {
+                List<TileController> tileMatched = tiles[x, y].GetAllMatches();
+
+                //just go to the next tile if no match
+                if(tileMatched == null|| tileMatched.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach(TileController item in tileMatched)
+                {
+                    //Add only the one that is not added yet
+                    if(!matchingTiles.Contains(item))
+                    {
+                        matchingTiles.Add(item);
+                    }
+                }
+            }
+        }
+        return matchingTiles;
+    }
 
     #region Swapping
     
