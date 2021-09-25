@@ -4,27 +4,7 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-    #region Singleton
-    private static BoardManager _instance = null;
-
-    public static BoardManager Instance{
-        get
-        {
-            if(_instance == null)
-            {
-                _instance = FindObjectOfType<BoardManager>();
-                if(_instance == null)
-                {
-                    Debug.LogError("Fatal Error : Board Manager Not Found!");
-                }
-            }
-        return _instance;
-        }
-    }
-
-    #endregion
-
-    [Header("Board")]
+     [Header("Board")]
     public Vector2Int size;
     public Vector2 offsetTile;
     public Vector2 offsetBoard;
@@ -37,21 +17,37 @@ public class BoardManager : MonoBehaviour
     private Vector2 endPosition;
     private TileController[,] tiles;
 
+
     // Start is called before the first frame update
     void Start()
     {
         Vector2 tileSize = tilePrefab.GetComponent<SpriteRenderer>().size;
         CreateBoard(tileSize);
+
+        IsProcessing = false;
+        IsSwapping = false;
     }
 
     // Update is called once per frame
 
     public bool IsAnimating
     {
-        get{return IsSwapping;}
+        get
+        {
+            return IsProcessing || IsSwapping;
+        }
     }
 
     public bool IsSwapping{get; set;}
+
+    public bool IsProcessing{get; set;}
+
+    public void Process()
+    {
+        IsProcessing = true;
+        ProcessMatches();
+
+    }
 
     
     private void CreateBoard(Vector2 tileSize)
@@ -101,6 +97,53 @@ public class BoardManager : MonoBehaviour
         return possibleId;
     }
 
+    #region Singleton
+    private static BoardManager _instance = null;
+
+    public static BoardManager Instance{
+        get
+        {
+            if(_instance == null)
+            {
+                _instance = FindObjectOfType<BoardManager>();
+                if(_instance == null)
+                {
+                    Debug.LogError("Fatal Error : Board Manager Not Found!");
+                }
+            }
+        return _instance;
+        }
+    }
+
+    private IEnumerator ClearMatches(List<TileController> matchingTiles, System.Action onCompleted)
+    {
+        List<bool> isCompleted = new List<bool>();
+        for(int i = 0; i< matchingTiles.Count; i++)
+        {
+            isCompleted.Add(false);
+        }
+
+        for(int i = 0; i < matchingTiles.Count; i++)
+        {
+            int index = i;
+            StartCoroutine(matchingTiles[i].SetDestroyed(()=>{isCompleted[index] = true;}));
+        }
+
+        yield return new WaitUntil(()=>{return IsAllTrue(isCompleted);});
+        onCompleted?.Invoke();
+    }
+
+    #endregion
+
+    public bool IsAllTrue(List<bool> list)
+    {
+        foreach(bool status in list)
+        {
+            if(!status) return false;
+        }
+
+        return true;
+    }
 
     public List<TileController> GetAllMatches()
     {
@@ -131,7 +174,33 @@ public class BoardManager : MonoBehaviour
         return matchingTiles;
     }
 
+    #region Match
+
+    private void ProcessMatches()
+    {
+        List<TileController> matchingTiles = GetAllMatches();
+
+        //stop locking if no match found 
+        if(matchingTiles == null || matchingTiles.Count == 0)
+        {
+            IsProcessing = false;
+            return;
+        }
+
+        StartCoroutine(ClearMatches(matchingTiles, ProcessDrop));
+    }
+
+    #endregion
+
     #region Swapping
+
+    #region Drop
+    private void ProcessDrop()
+    {
+        Debug.Log("Now Dropping");
+
+    }
+    #endregion
     
     public IEnumerator SwapTilePosition(TileController a, TileController b, System.Action onCompleted)
     {
@@ -159,7 +228,6 @@ public class BoardManager : MonoBehaviour
     }
 
     #endregion
-
     public Vector2Int GetTileIndex(TileController tile)
     {
         for(int x = 0; x < size.x; x++)
