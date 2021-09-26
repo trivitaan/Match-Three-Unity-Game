@@ -8,6 +8,8 @@ public class TileController : MonoBehaviour
     public int id;
     private BoardManager board;
     private SpriteRenderer render;
+    private GameFlowManager game;
+    private bool isSelected = false;
 
     private static Color selectedColor = new Color(0.5f, 0.5f, 0.5f);
     private static Color normalColor = Color.white;
@@ -22,7 +24,6 @@ public class TileController : MonoBehaviour
     private static TileController previousSelected = null;
     public bool IsDestroyed{get; private set;}
 
-    private bool isSelected = false;
 
     void Start()
     {
@@ -33,13 +34,14 @@ public class TileController : MonoBehaviour
     {
         board = BoardManager.Instance;
         render = GetComponent<SpriteRenderer>();
+        game = GameFlowManager.Instance;
     }
     
 
     private void OnMouseDown()
     {
         // Non Selectable conditions
-        if (render.sprite == null || board.IsAnimating)
+        if (render.sprite == null || board.IsAnimating || game.IsGameOver)
         {
             return;
         }
@@ -69,7 +71,6 @@ public class TileController : MonoBehaviour
                     SwapTile(otherTile, () => {
                         if (board.GetAllMatches().Count > 0)
                         {
-                            Debug.Log("MATCH FOUND");
                             board.Process();
                         }
                         else

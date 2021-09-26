@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScriptManager : MonoBehaviour
+public class ScoreManager : MonoBehaviour
 {
     private int combo;
     private static int highScore;
+    public int tileRatio;
+    public int comboRatio;
+
+    public int HighScore { get { return highScore; } }
+    public int CurrentScore { get { return currentScore; } }
+
+    private int currentScore;
+
 
     #region Singleton
 
@@ -30,14 +38,7 @@ public class ScriptManager : MonoBehaviour
 
     #endregion
 
-    public int tileRatio;
-    public int comboRatio;
-
-    public int HighScore { get { return highScore; } }
-    public int CurrentScore { get { return currentScore; } }
-
-    private int currentScore;
-
+    
     private void Start()
     {
         ResetCurrentScore();

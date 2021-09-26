@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+
+    private int combo;
+    
+    public bool IsSwapping{get; set;}
+
+    public bool IsProcessing{get; set;}
+
+    public void Process()
+    {
+        IsProcessing = true;
+        ProcessMatches();
+        combo = 0;
+
+    }
+
+    
      [Header("Board")]
     public Vector2Int size;
     public Vector2 offsetTile;
@@ -37,19 +53,6 @@ public class BoardManager : MonoBehaviour
             return IsProcessing || IsSwapping;
         }
     }
-
-    public bool IsSwapping{get; set;}
-
-    public bool IsProcessing{get; set;}
-
-    public void Process()
-    {
-        IsProcessing = true;
-        ProcessMatches();
-        combo = 0;
-
-    }
-
     
     private void CreateBoard(Vector2 tileSize)
     {
