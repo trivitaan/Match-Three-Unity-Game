@@ -48,6 +48,7 @@ public class TimeManager : MonoBehaviour
         if(time > duration)
         {
             GameFlowManager.Instance.GameOver();
+            return;
         }
         time += Time.deltaTime;
         

@@ -43,7 +43,7 @@ public class GameFlowManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
-        //ScoreManager.Instance.SetHighScore();
+        ScoreManager.Instance.SetHighScore();
         GameOverUI.Show();
 
     }

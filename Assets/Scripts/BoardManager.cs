@@ -14,8 +14,8 @@ public class BoardManager : MonoBehaviour
     public void Process()
     {
         IsProcessing = true;
-        ProcessMatches();
         combo = 0;
+        ProcessMatches();
 
     }
 
@@ -204,6 +204,7 @@ public class BoardManager : MonoBehaviour
     private void ProcessDrop()
     {
         Dictionary<TileController, int> droppingTiles = GetAllDrop();
+
         StartCoroutine(DropTiles(droppingTiles, ProcessDestroyAndFill));
     }
 

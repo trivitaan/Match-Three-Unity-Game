@@ -9,7 +9,7 @@ public class UITime : MonoBehaviour
     
     void Update()
     {
-        time.text = GetTimeString(TimeManager.Instance.GetRemainingTime());
+        time.text = GetTimeString(TimeManager.Instance.GetRemainingTime()+1);
     }
     void Show()
     {
@@ -23,8 +23,8 @@ public class UITime : MonoBehaviour
 
     private string GetTimeString(float timeRemaining)
     {
-        int minute = Mathf.floorToInt(timeRemaining / 60);
-        int second = Mathf.floorToInt(timeRemaining % 60);
+        int minute = Mathf.FloorToInt(timeRemaining / 60);
+        int second = Mathf.FloorToInt(timeRemaining % 60);
 
         return string.Format("{0} : {1}", minute.ToString(), second.ToString());
 
